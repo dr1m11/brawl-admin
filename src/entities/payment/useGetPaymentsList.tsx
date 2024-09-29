@@ -5,8 +5,6 @@ export const useGetPaymentsList = () => {
     const response = useQuery({
         queryKey: ['get-all-payments'],
         queryFn: paymentService.getAllPayments,
-        retry: false,
-        staleTime: 0,
     })
 
     return response.data ? response.data.data : []

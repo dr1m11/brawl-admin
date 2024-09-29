@@ -10,7 +10,7 @@ interface IReceiptModalProps {
 
 export const ReceiptModal = ({isOpen, onClose, payment}: IReceiptModalProps) => {
     return (
-        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <Modal isOpen={isOpen} onClose={onClose} isCentered size={'3xl'}>
             <ModalOverlay backdropFilter={'blur(2px)'}/>
             <ModalContent bg={'rgba(0,0,0,0)'} boxShadow={'none'}>
                 <Image src={`${API_URL}/${payment.receipt_url}`}/>

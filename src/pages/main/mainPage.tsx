@@ -16,24 +16,36 @@ export const MainPage = () => {
         receipt_url: '',
         user_id: '',
         amount: 0,
-        status: ''
+        status: 'Processing',
+        id: 0,
     });
 
     const response = useGetPaymentsList()
 
     const changeStatus = useChangeStatus()
 
-    const onAccept = (id: string) => {
-        changeStatus.mutateAsync({replenishment_id: id, status: 'Approved'})
+    const onAccept = async (id: number) => {
+        await changeStatus.mutateAsync({replenishment_id: id, status: 'Approved'})
     }
 
-    const onReject = (id: string) => {
-        changeStatus.mutateAsync({replenishment_id: id, status: 'Rejected'})
+    const onReject = async (id: number) => {
+        await changeStatus.mutateAsync({replenishment_id: id, status: 'Rejected'})
     }
 
     const onSelect = (payment: IPaymentResponse) => {
         setSelectedPayment(payment)
         onOpen()
+    }
+
+    const getColor = (status: string) => {
+        switch (status) {
+            case 'Approved':
+                return 'rgba(100,172,93,0.3)'
+            case 'Rejected':
+                return 'rgba(172,102,93,0.3)'
+            default:
+                return ''
+        }
     }
 
     useEffect(() => {
@@ -50,9 +62,10 @@ export const MainPage = () => {
                         borderRadius={8}
                         padding={'8px 12px'}
                         justifyContent={'space-between'}
-                        _hover={{background: '#dddddd'}}
+                        _hover={{background: item.status === 'Processing' ? '#dddddd' : getColor(item.status).replace('0.3', '0.6')}}
                         transition={'background 0.2s ease-in-out'}
                         alignItems={'flex-end'}
+                        background={getColor(item.status)}
                     >
                         <HStack gap={8} alignItems={'flex-start'}>
                             <Stack w={'100px'}>
@@ -71,10 +84,13 @@ export const MainPage = () => {
                                 </LabelWrapper>
                             </Stack>
                         </HStack>
-                        <HStack alignItems={'flex-end'}>
-                            <Button bg={'#38ac2a'} onClick={() => onAccept(item.receipt_url)}>Принять</Button>
-                            <Button bg={'#ac482a'} onClick={() => onReject(item.receipt_url)}>Отказ</Button>
-                        </HStack>
+                        {
+                            item.status === 'Processing' &&
+                            <HStack alignItems={'flex-end'}>
+                                <Button bg={'#38ac2a'} onClick={() => onAccept(item.id)}>Принять</Button>
+                                <Button bg={'#ac482a'} onClick={() => onReject(item.id)}>Отказ</Button>
+                            </HStack>
+                        }
                     </HStack>
                 ))
             }

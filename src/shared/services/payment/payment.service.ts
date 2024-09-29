@@ -3,13 +3,14 @@ import {axiosDefault} from "../api.ts";
 export interface IPaymentResponse {
     amount: number
     receipt_url: string
-    status: string
+    status: 'Approved' | 'Rejected' | 'Processing'
     user_id: string
+    id: number
 }
 
 export interface IChangeStatusRequest {
     status: 'Approved' | 'Rejected'
-    replenishment_id: string
+    replenishment_id: number
 }
 
 export const paymentService = {
@@ -18,11 +19,6 @@ export const paymentService = {
     },
 
     changeStatus(data: IChangeStatusRequest) {
-        const token = localStorage.getItem("token");
-        return axiosDefault.post('/authenticated/own-replenishment/change-status', data, {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
-        })
+        return axiosDefault.post('/authenticated/own-replenishment/change-status', data)
     }
 }

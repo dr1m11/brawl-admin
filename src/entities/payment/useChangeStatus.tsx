@@ -1,14 +1,15 @@
-import {QueryClient, useMutation} from "@tanstack/react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {IChangeStatusRequest, paymentService} from "../../shared/services/payment/payment.service.ts";
 
 export const useChangeStatus = () => {
-    const queryClient= new QueryClient()
+    const queryClient= useQueryClient()
     return useMutation({
-        mutationFn: (data: IChangeStatusRequest) => paymentService.changeStatus(data),
-        onSuccess: () => {
-            queryClient.invalidateQueries({
+        mutationFn: async (data: IChangeStatusRequest) => {
+            const response = await paymentService.changeStatus(data)
+            await queryClient.invalidateQueries({
                 queryKey: ['get-all-payments']
             })
-        }
+            return response
+        },
     })
 }

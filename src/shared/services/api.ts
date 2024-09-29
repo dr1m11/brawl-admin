@@ -34,5 +34,6 @@ axiosDefault.interceptors.response.use((response) => response,
     error => {
         if (error.status === 401) {
             removeFromStorage()
+            location.reload()
         }
     })

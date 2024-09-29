@@ -4,6 +4,7 @@ export interface ICard {
     number: string
     name: string
     bank: string
+    type: string | undefined
 }
 
 export const cardService = {
@@ -13,11 +14,6 @@ export const cardService = {
     },
 
     updateCard(data: ICard) {
-        const token = localStorage.getItem("token");
-        return axiosDefault.post('/authenticated/update-card', data, {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
-        })
+        return axiosDefault.post('/authenticated/update-card', data)
     }
 }

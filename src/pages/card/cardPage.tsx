@@ -17,13 +17,14 @@ export const CardPage = () => {
 
     const {values, setFieldValue, handleSubmit} = useFormik<ICard>({
         enableReinitialize: true,
-        initialValues: response?.data?.data ?? {
+        initialValues: response?.data ?? {
             name: '',
             bank: '',
-            number: ''
+            number: '',
+            type: '',
         },
         onSubmit: (data) => {
-            updateCard.mutateAsync(data)
+            updateCard.mutateAsync({...data, type: undefined})
         }
     })
 
